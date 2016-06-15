@@ -81,8 +81,26 @@ sudo npm install pm2 -g
 ```
 Start Process & Restart it on file change (Deployment) [more][l3]
 ```sh
-pm2 start app.js --watch
+pm2 start app.js
 ```
+Sample Watch File:  _process.json_
+```json
+{
+  "apps" : [{
+    "script"      : "index.js",
+    "watch"       : true,
+    "ignore_watch" : ["logs","node_modules","values"],
+    "env": {
+      "NODE_ENV": "production",
+    }
+  }]
+}
+```
+Setup procedure :
+```sh
+pm2 start process.json
+```
+
 Set it up for Starting on server restart
 ```sh
 pm2 startup
@@ -90,6 +108,13 @@ pm2 startup
 Save the current proccesses to see them start
 ```sh
 pm2 save
+```
+useful commands :
+```sh
+pm2 list
+pm2 show [id]
+pm2 logs
+pm2 monit
 ```
 
 Further readings:
@@ -100,6 +125,7 @@ Further readings:
 * [Free SSL Let's Encrypt][l8]
 * [Migrating from Apache -> Nginx][l6]
 * [Server Blocks in Ngninx][l7]
+* [Node_ENV variables][l9]
 
 
 [l1]: https://www.digitalocean.com/community/tutorials/how-to-set-up-a-node-js-application-for-production-on-ubuntu-14-04
@@ -110,3 +136,4 @@ Further readings:
 [l5]:https://www.digitalocean.com/community/tutorials/how-to-install-an-ssl-certificate-from-a-commercial-certificate-authority
 [l7]:https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-server-blocks-virtual-hosts-on-ubuntu-14-04-lts
 [l8]:https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-14-04
+[l9]:http://www.hacksparrow.com/running-express-js-in-production-mode.html
