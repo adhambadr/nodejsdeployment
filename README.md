@@ -9,18 +9,22 @@ credit to DO and all other articles i reference from.
 
 ### ubuntu installing necessary packages
 ```sh
+# Update sources
 sudo apt-get update
+# Install Git
 sudo apt-get install git
-cd ~ wget https://nodejs.org/dist/v4.2.3/node-v4.2.3-linux-x64.tar.gz
-mkdir node
-tar xvf node-v*.tar.?z --strip-components=1 -C ./node
-cd ~ && rm -rf node-v*
-mkdir node/etc
-echo 'prefix=/usr/local' > node/etc/npmrc
-sudo mv node /opt/
-sudo chown -R root: /opt/node
-sudo ln -s /opt/node/bin/node /usr/local/bin/node
-sudo ln -s /opt/node/bin/npm /usr/local/bin/npm
+# Install Nginx 
+sudo apt-get install nginx
+# Install Certbot (For SSL with Let's encrypt)
+# add sources for Certbot before this
+sudo apt-get install certbot python-certbox-nginx 
+# Install NodeJS (v13) (Change _13.x to whatever 14,15 or 100. 
+curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+sudo apt-get install -y nodejs
+# By now you have node, npm, git & certbot ready
+# Now some process management
+npm -g pm2
+
 ```
 
 ### Git Branch Deployment commands Checklist
@@ -30,8 +34,14 @@ cd /var/source-code.git
 git init --bare
 cd hooks && touch post-receive
 echo
-"#!/bin/sh
-git --work-tree=/var/www/livefolder --git-dir=/var/source-code.git checkout -f" > post-receive
+"
+#!/bin/sh
+git --work-tree=/var/www/livefolder --git-dir=/home/source-code.git checkout -f
+cd /var/www/livefolder
+npm i
+npm run build
+pm2 restart process.json
+" > post-receive
 chmod +x post-receive
 ```
 #### local
